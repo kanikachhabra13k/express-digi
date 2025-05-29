@@ -1,6 +1,6 @@
 import 'dotenv/config'
 import express from 'express'
-import logger from './logger';
+import logger from './logger.js';
 import morgan from 'morgan';
 const app = express();
 
@@ -9,6 +9,23 @@ app.use(express.json());
 const port =  process.env.POST || 3000;
 
 const morganFormat = ":method :url :status :response-time ms";
+
+// app needs to be created first
+app.use(
+  morgan(morganFormat, {
+    stream: {
+      write: (message) => {
+        const logObject = {
+          method: message.split(" ")[0],
+          url: message.split(" ")[1],
+          status: message.split(" ")[2],
+          responseTime: message.split(" ")[3],
+        };
+        logger.info(JSON.stringify(logObject));
+      },
+    },
+  })
+);
 
 let teaData = []
 let nextId = 1
