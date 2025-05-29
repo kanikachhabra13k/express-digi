@@ -1,10 +1,14 @@
+import 'dotenv/config'
 import express from 'express'
-
+import logger from './logger';
+import morgan from 'morgan';
 const app = express();
 
-const port = 3000;
-app.use(express.json());
 
+app.use(express.json());
+const port =  process.env.POST || 3000;
+
+const morganFormat = ":method :url :status :response-time ms";
 
 let teaData = []
 let nextId = 1
@@ -31,15 +35,15 @@ app.get('/teas/:id',(req,res)=>{
     }
     res.status(200).send(tea);
 });
-app.put("/teas/:id",(req,res)=>{
-    const tea = teaData.find((tea)=> tea.id === parseInt(req.params.id));
+app.put('/teas/:id',(req,res)=>{
+    const tea = teaData.find((t)=> t.id === parseInt(req.params.id))
     if(!tea){
-        return res.status(404).send("Tea not found");
+        return res.status(404).send('Tea not found');
     }
-    const {name,price} = req.body;
-    tea.name = name;
-    tea.price = price;
-    res.status(200).send(tea);
+    const { name,price } = req.body
+    tea.name = name
+    tea.price = price
+    res.status(200).send(tea)
 });
 app.delete("/teas/:id", (req, res) => {
   const index = teaData.findIndex((tea) => tea.id === parseInt(req.params.id));
