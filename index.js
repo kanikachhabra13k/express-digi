@@ -2,6 +2,8 @@ import 'dotenv/config'
 import express from 'express'
 import logger from './logger.js';
 import morgan from 'morgan';
+import chalk from 'chalk';
+
 const app = express();
 
 
@@ -33,6 +35,7 @@ app.get("/",(req,res)=>{
     res.send("Hello from Ria")
 });
 app.post('/teas', (req,res)=>{
+    logger.info(chalk.magentaBright("A post request is made to add a new tea"))
     const {name,price} = req.body
     const newTea = {
         id: nextId++,
